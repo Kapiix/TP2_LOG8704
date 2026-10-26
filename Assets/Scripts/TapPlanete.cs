@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-// Un tap court sur la planète la fait tourner et affiche (ou cache) sa fiche d'information.
-// Un glisser n'est pas un tap : on mesure la durée et le déplacement entre le toucher et le relâcher.
+// Un tap court sur la planète la fait tourner et affiche (ou cache) sa fiche d'information
 [RequireComponent(typeof(XRGrabInteractable))]
 public class TapPlanete : MonoBehaviour
 {
+    // prévient quand une planète est touchée, et compte les planètes posees
+    public static event System.Action PlaneteTouchee;
+    public static int NombreDePlanetes { get; private set; }
+
     [Header("Références")]
     [SerializeField] Transform m_Visuel;
     [SerializeField] GameObject m_Fiche;
@@ -39,12 +42,14 @@ public class TapPlanete : MonoBehaviour
 
     void OnEnable()
     {
+        NombreDePlanetes++;
         m_Interactable.selectEntered.AddListener(QuandTouchee);
         m_Interactable.selectExited.AddListener(QuandRelachee);
     }
 
     void OnDisable()
     {
+        NombreDePlanetes--;
         m_Interactable.selectEntered.RemoveListener(QuandTouchee);
         m_Interactable.selectExited.RemoveListener(QuandRelachee);
     }
@@ -66,6 +71,8 @@ public class TapPlanete : MonoBehaviour
 
     void QuandTap()
     {
+        PlaneteTouchee?.Invoke();
+
         m_Fiche.SetActive(!m_Fiche.activeSelf);
 
         if (m_Rotation != null)
@@ -79,7 +86,6 @@ public class TapPlanete : MonoBehaviour
 
         for (float t = 0f; t < m_DureeRotation; t += Time.deltaTime)
         {
-            // SmoothStep : démarre doucement, accélère, puis ralentit avant de s'arrêter.
             float progression = Mathf.SmoothStep(0f, 1f, t / m_DureeRotation);
             m_Visuel.localRotation = depart * Quaternion.Euler(0f, 360f * progression, 0f);
             yield return null;

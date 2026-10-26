@@ -4,8 +4,8 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-// Garde la planète fixee dans le monde réel avec un ancrage AR.
-// Un nouvel ancrage est créé à la pose, puis à chaque fois qu'on relâche la planète.
+// Garde la planète fixee dans le monde réel avec un ancrage AR
+// Un nouvel ancrage est créé à la pose, puis à chaque fois qu'on relâche la planète
 [RequireComponent(typeof(XRGrabInteractable))]
 public class AncragePlanete : MonoBehaviour
 {
@@ -39,7 +39,6 @@ public class AncragePlanete : MonoBehaviour
 
     IEnumerator AncrerAuProchainImage()
     {
-        // On attend une image pour laisser XR Interaction Toolkit finir de relâcher l'objet.
         yield return null;
 
         var ancienneAncre = m_Ancre;
@@ -55,7 +54,7 @@ public class AncragePlanete : MonoBehaviour
 
     void OnDestroy()
     {
-        // Quand la planète est supprimée, son ancrage ne sert plus à rien.
+        // Quand la planète est supprimée, son ancrage ne sert plus à rien
         if (m_Ancre != null)
             Destroy(m_Ancre.gameObject);
     }

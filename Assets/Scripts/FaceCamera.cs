@@ -10,7 +10,6 @@ public class FaceCamera : MonoBehaviour
         m_Camera = Camera.main.transform;
     }
 
-    // après que la caméra a bougé pendant cette image.
     void LateUpdate()
     {
         Vector3 direction = transform.position - m_Camera.position;
